@@ -1,0 +1,189 @@
+﻿@model bwFinaleVeterinaria.Models.Examination
+
+@{
+    ViewBag.Title = "AddExamination";
+}
+
+<h2 class="text-center mt-4">Aggiungi Visita</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div class="my-5 alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (TempData["Fail"] != null)
+{
+    <div class="my-5 alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["Fail"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="d-flex justify-content-center mt-4">
+
+    @using (Html.BeginForm("AddExamination", "Doctor", FormMethod.Post, new { @class = "form" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-group mt-1">
+            @Html.Label("petId", "Seleziona animale", new { @class = "control-label mb-1" })
+            <select name="petId" id="petId" class="form-control text-center">
+                <option class="text-center" value="-1">--- Seleziona Animale ---</option>
+                @if (TempData["Pets"] != null)
+                {
+                    foreach (var pet in TempData["Pets"] as List<bwFinaleVeterinaria.Models.Pet>)
+                    {
+                        <option value="@pet.Id">@pet.Name | @pet.Microchip</option>
+                    }
+                }
+            </select>
+        </div>
+
+        <div class="form-group mt-2">
+            @Html.LabelFor(model => model.ExaminationDate, htmlAttributes: new { @class = "control-label mb-1" })
+            @Html.EditorFor(model => model.ExaminationDate, new { htmlAttributes = new { @class = "form-control text-center", type = "datetime-local" } })
+            @Html.ValidationMessageFor(model => model.ExaminationDate, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group mt-2">
+            @Html.LabelFor(model => model.ObjectiveExamimation, htmlAttributes: new { @class = "control-label mb-1" })
+            @Html.EditorFor(model => model.ObjectiveExamimation, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.ObjectiveExamimation, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group mt-2">
+            @Html.LabelFor(model => model.TreatmentDescription, htmlAttributes: new { @class = "control-label mb-1" })
+            @Html.EditorFor(model => model.TreatmentDescription, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.TreatmentDescription, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group my-3">
+            <input type="submit" value="Aggiungi visita" class="btn btn-primary me-2 btn-do" />
+            <a href="@Url.Action("Index", "Doctor")" class="btn btn-secondary btn-dont">Torna Indietro</a>
+        </div>
+    }
+
+
+</div>
+
+<!-- Blocco per le chiamate asincrone -->
+<div class="d-flex justify-content-center">
+    <div id="animalHistoryContainer" class="mt-4" style="display: none;"></div>
+</div>
+
+
+@section scripts {
+    <script>
+        $(function () {
+            $('#petId').change(function () {
+                var selectedPetId = $(this).val();
+                if (selectedPetId != "-1") {
+                    $.ajax({
+                        url: '@Url.Action("GetAnimalHistory", "Api")',
+                        type: 'GET',
+                        data: { petId: selectedPetId },
+                        success: function (result) {
+                            $('#animalHistoryContainer').html(result);
+                            $('#animalHistoryContainer').show();
+                        },
+                        error: function (xhr, status, error) {
+                            console.error(xhr.responseText);
+                        }
+                    });
+                }
+                else {
+                    $('#animalHistoryContainer').html('');
+                    $('#animalHistoryContainer').hide();
+                }
+            });
+        });
+    </script>
+}
+
+@section styles {
+    <style>
+        .btn-do {
+            background-color: var(--azure) !important;
+            border: 0px;
+            font-weight: bold;
+        }
+
+        .btn-dont {
+            background-color: var(--dAzure) !important;
+            border: 0px;
+            font-weight: bold;
+        }
+
+            .btn-do:hover, .btn-dont:hover {
+                background-color: var(--btnHoverDoctor) !important;
+                color: white;
+            }
+
+        .form-group label {
+            color: var(--azure) !important;
+            font-weight: bold;
+        }
+
+        h2 {
+            color: var(--dAzure) !important;
+            font-weight: bold;
+        }
+
+        .form-control:focus {
+            border-color: var(--azure) !important;
+            box-shadow: 0 0 0 0.2rem var(--azure) !important;
+        }
+
+        .lastP {
+            color: var(--dAzure) !important;
+        }
+
+        /* Table */
+
+        .exam-table {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: var(--btnBorder);
+        }
+
+            .exam-table td, .exam-table th {
+                /*border: 2px solid #275897;*/
+                padding: 8px;
+            }
+
+            .exam-table tr:nth-child(even) {
+                background-color: var(--azure)
+            }
+
+            .exam-table tr:hover {
+                background-color: #275897;
+                color: white;
+            }
+
+            .exam-table thead th:first-child {
+                border-start-start-radius: 10px;
+            }
+
+            .exam-table thead th:last-child {
+                border-start-end-radius: 10px;
+            }
+
+            .exam-table tbody tr:last-child td:first-child {
+                border-end-start-radius: 10px;
+            }
+
+            .exam-table tbody tr:last-child td:last-child {
+                border-end-end-radius: 10px;
+            }
+
+            .exam-table th {
+                background-color: var(--dAzure);
+                color: white;
+                text-transform: uppercase;
+            }
+
+    </style>
+}

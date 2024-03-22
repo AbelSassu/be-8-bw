@@ -1,0 +1,86 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <title>@ViewBag.Title - KAPIDHAINI SRL®</title>
+    <link rel="shortcut icon" type="image/x-icon" href="~/Assets/Img/FarmaciaLogoNoBack.png" />
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link rel=" stylesheet" href="~/Assets/Css/styles.css" />
+    @RenderSection("styles", required: false)
+</head>
+<body>
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark">
+        <div class="container">
+            <img src="~/Assets/Img/FarmaciaLogoNoBack.png" style="width:60px;" />
+            @if (User.IsInRole("Doctor"))
+            {
+                <a href="@Url.Action("Index", "Home", new { area = "" })" class="navbar-brand fw-bold me-5">KAPIDHAINI SRL | VETERINARIA</a>
+            }
+            else if (User.IsInRole("Pharmacist"))
+            {
+        <a href="@Url.Action("Index", "Home", new { area = "" })" class="navbar-brand fw-bold me-5">KAPIDHAINI SRL | FARMACIA</a>
+            }
+            else
+            {
+        <a href="@Url.Action("Index", "Home", new { area = "" })" class="navbar-brand fw-bold me-5" style="color: #7D6151;">KAPIDHAINI SRL®</a>
+            }
+            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Attiva/Disattiva spostamento" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
+
+                <ul class="navbar-nav flex-grow-3">
+                    @if (User.IsInRole("Doctor"))
+                    {
+                        <style>
+                            .navbar {
+                                background-color: var( --dAzure) !important;
+                            }
+                        </style>
+                        <li>@Html.ActionLink("Dashboard", "Index", "Doctor", new { area = "" }, new { @class = "nav-link text-white fw-bold" })</li>
+                    }
+                    @if (User.IsInRole("Pharmacist"))
+                    {
+                        <style>
+                            .navbar {
+                                background-color: var(--dGreen) !important;
+                            }
+                        </style>
+                        <li>@Html.ActionLink("Dashboard", "ProductsList", "Pharmacist", new { area = "" }, new { @class = "nav-link text-white fw-bold" })</li>
+                        <li>@Html.ActionLink("Visualizza tutti gli ordini", "SalesDetails", "Pharmacist", new { area = "" }, new { @class = "nav-link text-white fw-bold" })</li>
+                        <li>@Html.ActionLink("Cerca ordini", "Search", "Pharmacist", new { area = "" }, new { @class = "nav-link text-white fw-bold" })</li>
+                    }
+                </ul>
+                <ul class="navbar-nav">
+                    @if (Request.IsAuthenticated)
+                    {
+                        <li>
+                            @using (Html.BeginForm("Logout", "Auth", FormMethod.Post, new { id = "logoutForm" }))
+                            {
+                                <a href="javascript:document.getElementById('logoutForm').submit()" class="nav-link text-white fw-bold">Logout</a>
+                            }
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container body-content mb-5">
+        @RenderBody()
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+
+</body>
+</html>

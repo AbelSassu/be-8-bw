@@ -1,0 +1,83 @@
+﻿@model IEnumerable<bwFinaleVeterinaria.Models.Product>
+
+@{
+    ViewBag.Title = "Products List";
+}
+
+<link rel="stylesheet" href="~/Assets/Css/PharmacyStyle.css" />
+
+<style>
+    .table-rounded {
+        border-collapse: separate;
+        border-spacing: 0;
+        border-radius: 20px; 
+        overflow: hidden;
+        
+    }
+
+    .table-rounded th,
+    .table-rounded td {
+        border: 1px solid var(--lGreen); 
+        padding: 8px;
+
+    }
+</style>
+
+<h2 class="mb-3 text-center">Lista Prodotti</h2>
+
+<hr class="divider" />
+
+<h3 class="mt-4 mb-1">Prodotti Alimentari</h3>
+<table class="table table-bordered table-rounded">
+    <thead class="text-center">
+        <tr>
+            <th>Nome</th>
+            <th>Tipo</th>
+            <th>Usi Possibili</th>
+            <th>Azienda Produttrice</th>
+        </tr>
+    </thead>
+    <tbody class="text-center">
+        @foreach (var product in Model.Where(p => p.Type == "Alimentare"))
+        {
+            <tr>
+                <td><a href="@Url.Action("ProductDetails", "Pharmacist", new { id = product.Id })">@product.Name</a></td>
+                <td>@product.Type</td>
+                <td>@product.PossibleUses</td>
+                <td><a href="@Url.Action("CompanyDetails", "Pharmacist", new { id = product.CompanyId })">@product.Company.Name</a></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h3 class="mt-5 mb-1">Prodotti Farmaceutici</h3>
+<table class="table table-bordered table-rounded">
+    <thead class="text-center">
+        <tr>
+            <th>Nome</th>
+            <th>Tipo</th>
+            <th>Usi Possibili</th>
+            <th>Azienda Produttrice</th>
+        </tr>
+    </thead>
+    <tbody class="text-center">
+        @foreach (var product in Model.Where(p => p.Type == "Farmaco"))
+        {
+            <tr>
+                <td><a href="@Url.Action("ProductDetails", "Pharmacist", new { id = product.Id })">@product.Name</a></td>
+                <td>@product.Type</td>
+                <td>@product.PossibleUses</td>
+                <td><a href="@Url.Action("CompanyDetails", "Pharmacist", new { id = product.CompanyId })">@product.Company.Name</a></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="text-center mt-2 buttonsCointainer">
+    <a href="@Url.Action("ProductAdd", "Pharmacist")" class="btn btn-primary m-2">Aggiungi Prodotto</a>
+  
+    <a href="@Url.Action("CompanyAdd", "Pharmacist")" class="btn btn-primary m-2">Aggiungi Azienda</a>
+    
+    <a href="@Url.Action("SalesAdd", "Pharmacist")" class="btn btn-primary m-2">Registra un Ordine</a>
+   
+</div>

@@ -1,0 +1,35 @@
+﻿@model bwFinaleVeterinaria.Models.Product
+
+<div>
+    <h3>Dettagli del prodotto:</h3>
+    <hr />
+    @if (Model != null)
+    {
+        <dl class="dl-horizontal">
+            <dt style="font-size: 1.5rem; color: red">Armadietto:</dt>
+            <dd>
+                @foreach (var cabinet in Model.Cabinets)
+                {
+                    <div style="font-size: 1.5rem;">
+                        Armadietto: @cabinet.NumericCode
+                        Cassetto: @cabinet.Drawer.DrawerNumber
+                    </div>
+                }
+            </dd>
+
+            <dt>Nome:</dt>
+            <dd>@Html.DisplayFor(model => model.Name)</dd>
+
+            <dt>Tipo: </dt>
+            <dd>@Html.DisplayFor(model => model.Type)</dd>
+
+            <dt>Possibili usi:</dt>
+            <dd>@Html.DisplayFor(model => model.PossibleUses)</dd>
+        </dl>
+    }
+    else
+    {
+        <p>No product found.</p>
+    }
+</div>
+

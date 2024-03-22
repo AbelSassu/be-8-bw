@@ -1,0 +1,28 @@
+﻿@model IEnumerable<bwFinaleVeterinaria.Models.Examination>
+
+@if (Model.Any())
+{
+    <table class="exam-table">
+        <thead>
+            <tr>
+                <th class="text-center">Data Visita</th>
+                <th class="text-center">Esame obiettivo</th>
+                <th class="text-center">Descrizione del trattamento</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var exam in Model)
+            {
+                <tr>
+                    <td class="text-center">@exam.ExaminationDate.ToShortDateString()</td>
+                    <td class="text-center">@exam.ObjectiveExamimation</td>
+                    <td class="text-center">@exam.TreatmentDescription</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p class="text-center fw-bold lastP">Non ci sono visite registrate per questo animale.</p>
+}
